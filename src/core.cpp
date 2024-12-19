@@ -165,28 +165,6 @@ void Core::ShowRoomMap() {
     }
 }
 
-void Core::simulateRoom() {
-    Vector<std::string> a = roomStorage->FindPeriodSeatsAvai("9:30", "10:30");
-    for (size_t i = 0; i < a.size(); i++) {
-        std::cout << a[i] << std::endl;
-    }
-    Vector<std::string> close = roomStorage->FindClosestSolution("8:30");
-    for (size_t i = 0; i < close.size(); i++) {
-        std::cout << close[i] << std::setw(4);
-    }
-}
-
-void Core::simulateRes() {
-    reservStorage->creatTable();
-    reservStorage->addRecord(0, "123", 10, 0, "8:30", "10:30", getFullFormattedTime());
-    reservStorage->finishRecord("123", getFullFormattedTime());
-}
-
-void Core::init3DB() {
-    reservStorage->creatTable();
-    studentStorage->creatTable();
-}
-
 //输入预约信息完成预定
 void Core::registerComputer(std::string& timeStart, std::string& timeLast, std::string& computer_id, std::string& status, std::string& phone_number) {
     roomStorage->ChangePeriodStatus(timeStart, timeLast, computer_id, status);

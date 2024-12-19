@@ -25,32 +25,28 @@ public:
     void setStudentStorage(StudentStorage* studentStorageInjection);
     void setReservStorage(ReservStorage* reservStorageInjection);
     void setCrowService(CrowService* crowServiceInjection);
-    void registerComputer(std::string& timeStart, std::string& timeLast, std::string& computer_id, std::string& status, std::string& phone_number);
     void resetRoomStorage();
+    void ShowRoomMap();
     //void simulateStudentStorage();
+    void StartWeb();
+    void StartThreads();
+
+private:
+    // 线程数据结构
     int getTimeDifferenceInHours(const std::string& inputTime);
     std::string getCurrentTimeFormatted();
     std::string getFullFormattedTime();
     bool isTimeToEnd(const std::string& endTimeStr);
     std::array<std::string, 2> getTimePeriod(int hour, int minute);
-    void ShowRoomMap();
-    void simulateRoom();
-    void simulateRes();
-    void init3DB();
     Vector<std::string> getPeriodSeats(const std::string& time_start, const std::string& time_stop);
     void leaveComputer(std::string& phone_number, std::string& status);
     void deleteReserv(std::string& computer_id, std::string& phone_number, std::string& status);
     Vector<std::string> getAvaiSeatNow();
     std::string generateOccupancyJson();
     void setupRoutes();
-    void StartWeb();
     void CleanRecords();
     void AutoRegister();
-    void StartThreads();
-    void StopThreads();
-
-private:
-    // 线程数据结构
+    void registerComputer(std::string& timeStart, std::string& timeLast, std::string& computer_id, std::string& status, std::string& phone_number);
     struct ThreadControl {
         std::thread* clearThread;
         std::thread* queueThread;

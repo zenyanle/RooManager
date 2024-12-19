@@ -19,15 +19,9 @@ int main() {
         core.setReservStorage(&reservStorage);
         core.setCrowService(&crowService);
 
-
         core.resetRoomStorage();
         core.StartThreads();
         // 定义时间、教室 ID 和状态
-        std::string timeStart = "8:00"; // 假设时间格式为 HH:MM
-        std::string timeLast = "10:00"; 
-        //std::string classroom_id = "12"; // 假设教室 ID
-        std::string status = "1"; // 假设状态
-
         // 注册计算机        
         //core.registerComputer(timeStart, timeLast, classroom_id, status);
         core.ShowRoomMap();
