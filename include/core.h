@@ -12,6 +12,7 @@
 #include <chrono>
 #include <atomic>
 #include <sparse_matrix.h>
+#include <hash_table.h>
 
 class Core {
     RoomStorage* roomStorage = nullptr;
@@ -31,6 +32,8 @@ public:
     //void simulateStudentStorage();
     void StartWeb();
     void StartThreads();
+    std::string DisplayStudentRank();
+
 
 private:
     // 线程数据结构

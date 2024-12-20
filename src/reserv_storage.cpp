@@ -108,3 +108,18 @@ Vector<std::string> ReservStorage::GetWaitingRecords() {
     return list;
 }
 
+void ReservStorage::SumStudents(HashTable& phoneBook) {
+    std::string getPeriodSQL = "SELECT phone_number FROM Reservation;";
+    sqlite3pp::query qry(db, getPeriodSQL.c_str());
+    int value;
+    for (auto v : qry) {
+        std::string phone_number;
+        v.getter() >> phone_number;
+        if (!phoneBook.search(phone_number, value)){
+            phoneBook.insert(phone_number, 1);
+        }else {
+            phoneBook.increment(phone_number);
+        }
+    }
+}
+

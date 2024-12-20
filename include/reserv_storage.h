@@ -6,6 +6,7 @@
 //#include <vector>
 #include "sqlite3pp.h"
 #include "my_vector.h"
+#include "hash_table.h"
 
 class ReservStorage {
 public:
@@ -18,6 +19,8 @@ public:
     Vector<Vector<std::string>> GetActiveRecord();
     void AddStatusOneRecord(const std::string& phone_number);
     Vector<std::string> GetWaitingRecords();
+    void SumStudents(HashTable& phoneBook);
+
 
 
 private:

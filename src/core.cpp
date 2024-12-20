@@ -480,6 +480,23 @@ void Core::setupRoutes() {
                 return crow::response(500, error_response);
             }
         });
+
+        CROW_ROUTE(app, "/api/get_ranks")
+        .methods("GET"_method)
+        ([this](const crow::request& req) {
+            try {
+
+                auto jsonData = DisplayStudentRank(); // 返回 crow::json::wvalue
+                return crow::response(jsonData);  // 直接返回 JSON
+            } catch (const std::exception& e) {
+                crow::json::wvalue error_response({
+                    {"status", "error"},
+                    {"message", e.what()}
+                });
+                return crow::response(500, error_response);
+            }
+        });
+
 }
 
 void Core::CleanRecords() {
@@ -555,4 +572,10 @@ std::string Core::sparseMatrixToJson(const SparseMatrix& matrix) {
     j["elements"] = elements;
     
     return j.dump(4); 
+}
+
+std::string Core::DisplayStudentRank() {
+    HashTable phoneBook(100);
+    reservStorage->SumStudents(phoneBook);
+    return phoneBook.toJson();
 }

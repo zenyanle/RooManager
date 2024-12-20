@@ -4,6 +4,9 @@
 #include <string>
 #include <iostream>
 #include "my_vector.h"
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 class HashTable {
 private:
@@ -129,20 +132,21 @@ public:
         return false;
     }
 
-    // 按值排序方法
     Vector<std::pair<std::string, int>> bubbleSortByValue() {
         Vector<std::pair<std::string, int>> items;
         
+        // 收集有效元素
         for (int i = 0; i < capacity; i++) {
             if (table[i].isOccupied && !table[i].isDeleted) {
                 items.push_back({table[i].phoneNumber, table[i].value});
             }
         }
 
+        // 冒泡排序（从大到小）
         int n = items.size();
         for (size_t i = 0; i < n - 1; i++) {
             for (size_t j = 0; j < n - i - 1; j++) {
-                if (items[j].second > items[j + 1].second) {
+                if (items[j].second < items[j + 1].second) {  // 改变比较符号 > 为 <
                     std::swap(items[j], items[j + 1]);
                 }
             }
@@ -165,6 +169,41 @@ public:
     int getSize() const {
         return size;
     }
+
+    // 导出为JSON方法
+    std::string toJson() {
+        json j;
+        j["capacity"] = capacity;
+        j["size"] = size;
+        
+        // 先获取排序后的数据
+        Vector<std::pair<std::string, int>> sortedItems = bubbleSortByValue();
+        
+        // 转换为JSON数组
+        json items = json::array();
+        for (size_t j = 0; j < sortedItems.size(); j++) {
+            // 找到该电话号码在哈希表中的索引
+            int index = -1;
+            for (int i = 0; i < capacity; i++) {
+                if (table[i].isOccupied && !table[i].isDeleted && 
+                    table[i].phoneNumber == sortedItems[j].first) {
+                    index = i;
+                    break;
+                }
+            }
+            
+            items.push_back({
+                {"phoneNumber", sortedItems[j].first},
+                {"value", sortedItems[j].second},
+                {"index", index}
+            });
+        }
+        j["items"] = items;
+        
+        return j.dump(4);  // 使用4空格缩进
+    }
+
+
 };
 
 #endif // HASH_TABLE_H
