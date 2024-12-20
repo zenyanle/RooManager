@@ -11,6 +11,7 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <sparse_matrix.h>
 
 class Core {
     RoomStorage* roomStorage = nullptr;
@@ -46,6 +47,7 @@ private:
     void setupRoutes();
     void CleanRecords();
     void AutoRegister();
+    std::string sparseMatrixToJson(const SparseMatrix& matrix);
     void registerComputer(std::string& timeStart, std::string& timeLast, std::string& computer_id, std::string& status, std::string& phone_number);
     struct ThreadControl {
         std::thread* clearThread;

@@ -464,6 +464,22 @@ void Core::setupRoutes() {
                 return crow::response(400);
             }
         });
+
+        CROW_ROUTE(app, "/api/get_map1")
+        .methods("GET"_method)
+        ([this](const crow::request& req) {
+            try {
+
+                auto jsonData = sparseMatrixToJson(SparseMatrix(roomStorage->GetTableMap()));  // 返回 crow::json::wvalue
+                return crow::response(jsonData);  // 直接返回 JSON
+            } catch (const std::exception& e) {
+                crow::json::wvalue error_response({
+                    {"status", "error"},
+                    {"message", e.what()}
+                });
+                return crow::response(500, error_response);
+            }
+        });
 }
 
 void Core::CleanRecords() {
@@ -512,4 +528,31 @@ void Core::StartThreads() {
     
 void Core::StartWeb() {
     crowService->start(8989);
+}
+
+std::string Core::sparseMatrixToJson(const SparseMatrix& matrix) {
+    using json = nlohmann::json;
+    json j;
+    j["rows"] = matrix.getRows();
+    j["cols"] = matrix.getCols();
+    j["count"] = matrix.getCount();
+    
+    json elements = json::array();
+    Vector<Vector<std::string>> data = matrix.toVector();
+    
+    // 遍历矩阵，存储非零元素
+    for (int i = 0; i < matrix.getRows(); i++) {
+        for (int j = 0; j < matrix.getCols(); j++) {
+            if (matrix.get(i, j) != "0") {
+                elements.push_back({
+                    {"row", i},
+                    {"col", j},
+                    {"value", matrix.get(i, j)}
+                });
+            }
+        }
+    }
+    j["elements"] = elements;
+    
+    return j.dump(4); 
 }
