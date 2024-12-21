@@ -15,101 +15,78 @@ private:
         Seat(int c = 0, int u = 0) : code(c), usageCount(u), index(0) {}
     };
     
-    Vector<Seat> heap;      // 最大堆数组
-    Vector<Seat*> seats;    // 直接访问数组，存储指向堆中元素的指针
+    Vector<Seat> heap;
 
-    void siftDown(int index) {
-        int size = heap.size();
-        while (true) {
-            int largest = index;
-            int left = 2 * index + 1;
-            int right = 2 * index + 2;
-
-            if (left < size && heap[left].usageCount > heap[largest].usageCount) {
-                largest = left;
-            }
-            if (right < size && heap[right].usageCount > heap[largest].usageCount) {
-                largest = right;
-            }
-
-            if (largest == index) {
+    void siftUp(int index) {
+        while (index > 0) {
+            int parent = (index - 1) / 2;
+            if (heap[parent].usageCount < heap[index].usageCount) {
+                // 交换节点
+                Seat temp = heap[parent];
+                heap[parent] = heap[index];
+                heap[index] = temp;
+                
+                // 更新索引
+                heap[parent].index = parent;
+                heap[index].index = index;
+                
+                index = parent;
+            } else {
                 break;
             }
-
-            Seat temp = heap[index];
-            heap[index] = heap[largest];
-            heap[largest] = temp;
-            
-            heap[index].index = index;
-            heap[largest].index = largest;
-            
-            seats[heap[index].code - 1] = &heap[index];
-            seats[heap[largest].code - 1] = &heap[largest];
-            
-            index = largest;
-        }
-    }
-
-    void buildMaxHeap() {
-        for (int i = heap.size() / 2 - 1; i >= 0; i--) {
-            siftDown(i);
         }
     }
 
 public:
-    // 构造函数：初始化20个座位
+    // 构造函数
     SeatHeap() {
-        // 先预留空间
-        for (int i = 0; i < 20; i++) {
-            seats.push_back(nullptr);
-        }
-        
         // 初始化堆
         for (int i = 0; i < 20; i++) {
             heap.push_back(Seat(i + 1, 0));
             heap[i].index = i;
-            seats[i] = &heap[i];
         }
-        
-        buildMaxHeap();
     }
 
-    // 增加指定座位的使用次数
+    // 增加使用次数
     bool increment(int seatCode) {
-        if (seatCode < 1 || seatCode > 20) return false;
+        if (seatCode < 1 || seatCode > 20) {
+            return false;
+        }
         
-        Seat* seat = seats[seatCode - 1];
-        seat->usageCount++;
-        siftDown(seat->index);
+        // 找到对应座位的索引
+        for (int i = 0; i < heap.size(); i++) {
+            if (heap[i].code == seatCode) {
+                heap[i].usageCount++;
+                siftUp(i);
+                break;
+            }
+        }
         return true;
     }
 
-    // 获取最受欢迎的座位
-    Seat getTopSeat() const {
+    // 获取最热门座位的编号
+    int getTopSeatCode() const {
         if (heap.empty()) {
-            return Seat();
+            return 0;
         }
-        return heap[0];
+        return heap[0].code;
     }
 
-    // 获取前N个最受欢迎的座位
-    Vector<Seat> getTopN(int n) const {
-        Vector<Seat> result;
-        int count = std::min(n, (int)heap.size());
-        for (int i = 0; i < count; i++) {
-            result.push_back(heap[i]);
+    // 获取最热门座位的使用次数
+    int getTopSeatUsage() const {
+        if (heap.empty()) {
+            return 0;
         }
-        return result;
+        return heap[0].usageCount;
     }
 
-    // 打印当前状态
+    // 用于调试的打印函数
     void print() const {
-        std::cout << "【" << "2024-12-21 05:38:41" << "】" << std::endl;
-        std::cout << "【" << "zenyanle" << "】" << std::endl;
         std::cout << "座位使用情况：" << std::endl;
         for (int i = 0; i < heap.size(); i++) {
             std::cout << "座位 " << heap[i].code 
-                      << ": " << heap[i].usageCount << "次" << std::endl;
+                      << ": " << heap[i].usageCount << "次" 
+                      << " (index: " << heap[i].index << ")" << std::endl;
         }
     }
 };

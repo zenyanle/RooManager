@@ -20,10 +20,12 @@ class Core {
     StudentStorage* studentStorage = nullptr;
     ReservStorage* reservStorage = nullptr;
     CrowService* crowService = nullptr;
-    SeatHeap seats;
+    SeatHeap* seats;
 
 public:
-    Core() {}
+    Core() {
+        seats = new SeatHeap();
+    }
 
     void setRoomStorage(RoomStorage* roomStorageInjection);
     void setStudentStorage(StudentStorage* studentStorageInjection);

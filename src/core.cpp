@@ -169,7 +169,7 @@ void Core::ShowRoomMap() {
 void Core::registerComputer(std::string& timeStart, std::string& timeLast, std::string& computer_id, std::string& status, std::string& phone_number) {
     roomStorage->ChangePeriodStatus(timeStart, timeLast, computer_id, status);
     reservStorage->addRecord(0, phone_number, std::stoi(computer_id), 0, timeStart, timeLast, getFullFormattedTime());
-    seats.increment(std::stoi(computer_id));
+    seats->increment(std::stoi(computer_id));
 }
 
 //查询某一时间段空闲机位：根据用户输入时间，输出该时间段内空闲机位信息
@@ -503,7 +503,7 @@ void Core::setupRoutes() {
         ([this](const crow::request& req) {
             try {
 
-                auto jsonData = seats.getTopSeat().code; // 返回 crow::json::wvalue
+                auto jsonData = std::to_string(seats->getTopSeatCode()); // 返回 crow::json::wvalue
                 return crow::response(jsonData);  // 直接返回 JSON
             } catch (const std::exception& e) {
                 crow::json::wvalue error_response({
