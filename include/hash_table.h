@@ -146,7 +146,7 @@ public:
         int n = items.size();
         for (size_t i = 0; i < n - 1; i++) {
             for (size_t j = 0; j < n - i - 1; j++) {
-                if (items[j].second < items[j + 1].second) {  // 改变比较符号 > 为 <
+                if (items[j].second < items[j + 1].second) {
                     std::swap(items[j], items[j + 1]);
                 }
             }

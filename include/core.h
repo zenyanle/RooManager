@@ -13,12 +13,14 @@
 #include <atomic>
 #include <sparse_matrix.h>
 #include <hash_table.h>
+#include "seat_heap.h"
 
 class Core {
     RoomStorage* roomStorage = nullptr;
     StudentStorage* studentStorage = nullptr;
     ReservStorage* reservStorage = nullptr;
     CrowService* crowService = nullptr;
+    SeatHeap seats;
 
 public:
     Core() {}
